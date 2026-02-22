@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Desire Research — Market Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #09090c;
+      --surface: #111116;
+      --surface-2: #1a1a22;
+      --border: #25252f;
+      --border-bright: #3a3a4a;
+      --gold: #c8973a;
+      --gold-dim: #8a6520;
+      --gold-glow: rgba(200, 151, 58, 0.12);
+      --teal: #4db8a8;
+      --teal-dim: #2a6b61;
+      --text: #e8e6e0;
+      --text-secondary: #7a7a8c;
+      --text-muted: #4a4a58;
+      --success: #4a9e6a;
+      --error: #c05858;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Outfit', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      padding: 28px 32px 24px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #0e0e14 0%, var(--bg) 100%);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(200,151,58,0.03) 40px, rgba(200,151,58,0.03) 41px),
+        repeating-linear-gradient(0deg,  transparent, transparent 40px, rgba(200,151,58,0.03) 40px, rgba(200,151,58,0.03) 41px);
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      gap: 16px;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .header-wordmark {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .header-wordmark span {
+      color: var(--gold);
+    }
+
+    .header-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-bright);
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    .header-tagline {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Main layout ── */
+    .layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar / Form ── */
+    .sidebar {
+      width: 360px;
+      min-width: 360px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 24px 24px 0;
+    }
+
+    .sidebar-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-subtitle {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 24px;
+    }
+
+    .form-body {
+      padding: 0 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .field-label .required {
+      color: var(--gold);
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .field-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: -3px;
+    }
+
+    input[type="text"],
+    input[type="url"] {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 13px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input[type="text"]:focus,
+    input[type="url"]:focus {
+      border-color: var(--gold-dim);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+
+    input::placeholder { color: var(--text-muted); }
+
+    .toggle-field {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      padding: 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      transition: border-color 0.15s;
+    }
+
+    .toggle-field:hover { border-color: var(--border-bright); }
+
+    .toggle-field input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin-top: 1px;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .toggle-label-wrap { flex: 1; }
+
+    .toggle-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+    }
+
+    .toggle-desc {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .btn-run {
+      width: 100%;
+      padding: 13px 20px;
+      background: var(--gold);
+      color: #09090c;
+      border: none;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-run:hover:not(:disabled) {
+      background: #daa840;
+      box-shadow: 0 4px 20px rgba(200, 151, 58, 0.3);
+    }
+
+    .btn-run:active:not(:disabled) { transform: translateY(1px); }
+
+    .btn-run:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-run .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(9,9,12,0.3);
+      border-top-color: #09090c;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .btn-run.loading .spinner { display: block; }
+    .btn-run.loading .btn-icon { display: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .info-box {
+      padding: 12px 14px;
+      background: rgba(77, 184, 168, 0.06);
+      border: 1px solid rgba(77, 184, 168, 0.2);
+      border-radius: 6px;
+      font-size: 11px;
+      color: var(--teal);
+      line-height: 1.5;
+    }
+
+    /* ── Results panel ── */
+    .results-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .results-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+      gap: 12px;
+    }
+
+    .results-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .status-dot.streaming {
+      background: var(--gold);
+      animation: pulse-dot 1s ease-in-out infinite;
+    }
+
+    .status-dot.done { background: var(--success); }
+    .status-dot.error { background: var(--error); }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .status-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-action {
+      padding: 7px 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-action:hover:not(:disabled) {
+      border-color: var(--border-bright);
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .btn-action:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .btn-action.primary {
+      border-color: var(--gold-dim);
+      color: var(--gold);
+    }
+
+    .btn-action.primary:hover:not(:disabled) {
+      background: var(--gold-glow);
+      border-color: var(--gold);
+    }
+
+    /* ── Output area ── */
+    .output-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 40px;
+    }
+
+    .output-scroll::-webkit-scrollbar { width: 5px; }
+    .output-scroll::-webkit-scrollbar-track { background: transparent; }
+    .output-scroll::-webkit-scrollbar-thumb {
+      background: var(--border-bright);
+      border-radius: 3px;
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      text-align: center;
+      gap: 16px;
+      opacity: 0.7;
+    }
+
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      border: 1px solid var(--border-bright);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: var(--text-muted);
+      background: var(--surface);
+    }
+
+    .empty-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .empty-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 300px;
+      line-height: 1.6;
+    }
+
+    .empty-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+      max-width: 280px;
+      margin-top: 8px;
+    }
+
+    .empty-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--gold);
+      background: var(--gold-glow);
+      border: 1px solid var(--gold-dim);
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    /* Streaming / rendered output */
+    #output-raw {
+      display: none;
+    }
+
+    #output-rendered {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+      max-width: 860px;
+    }
+
+    #output-rendered h1 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px;
+      line-height: 1.2;
+    }
+
+    #output-rendered h2 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 36px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    #output-rendered h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gold);
+      margin: 28px 0 8px;
+    }
+
+    #output-rendered h4 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin: 20px 0 8px;
+    }
+
+    #output-rendered p { margin: 0 0 12px; }
+
+    #output-rendered ul,
+    #output-rendered ol {
+      margin: 0 0 12px 20px;
+    }
+
+    #output-rendered li { margin-bottom: 4px; }
+
+    #output-rendered strong { color: var(--text); font-weight: 600; }
+
+    #output-rendered em { color: var(--text-secondary); }
+
+    #output-rendered code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--teal);
+    }
+
+    #output-rendered pre {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    #output-rendered pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    #output-rendered table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+
+    #output-rendered th {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 9px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    #output-rendered td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      vertical-align: top;
+    }
+
+    #output-rendered tr:nth-child(even) td {
+      background: rgba(255,255,255,0.015);
+    }
+
+    #output-rendered blockquote {
+      border-left: 3px solid var(--gold-dim);
+      padding-left: 16px;
+      margin: 12px 0;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    #output-rendered hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    /* Streaming cursor */
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--gold);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: blink 0.8s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Error state */
+    .error-message {
+      padding: 16px 20px;
+      background: rgba(192, 88, 88, 0.08);
+      border: 1px solid rgba(192, 88, 88, 0.3);
+      border-radius: 8px;
+      color: #e08080;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-bright);
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: var(--text);
+      transform: translateY(10px);
+      opacity: 0;
+      transition: all 0.2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; overflow: auto; }
+
+      .sidebar {
+        width: 100%;
+        min-width: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .output-scroll { padding: 24px 20px; }
+
+      .results-toolbar { flex-wrap: wrap; }
+
+      #output-rendered h1 { font-size: 24px; }
+      #output-rendered h2 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="header-wordmark">Desire <span>Research</span></div>
+        <div class="header-badge">Market Intelligence</div>
+      </div>
+      <div class="header-tagline">Powered by Claude AI &nbsp;·&nbsp; Surface desires &amp; emotional drivers</div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- ── Sidebar Form ── -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">Research Parameters</div>
+        <div class="sidebar-subtitle">Fill in your product details to begin systematic desire mapping.</div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <form class="form-body" id="research-form" autocomplete="off">
+
+        <div class="field">
+          <label class="field-label" for="productCategory">
+            Product Category <span class="required">*</span>
+          </label>
+          <div class="field-hint">The market space you're researching</div>
+          <input type="text" id="productCategory" name="productCategory"
+            placeholder="e.g. Cat water fountains" required />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="country">
+            Country <span class="required">*</span>
+          </label>
+          <div class="field-hint">Target market geography</div>
+          <input type="text" id="country" name="country"
+            placeholder="e.g. United States" required />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="product">
+            Product / Product Category <span class="required">*</span>
+          </label>
+          <div class="field-hint">Specific product you're researching</div>
+          <input type="text" id="product" name="product"
+            placeholder="e.g. Stainless steel cat water fountain" required />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="productLink">Product Page URL</label>
+          <div class="field-hint">Your product or a competitor's page (optional)</div>
+          <input type="url" id="productLink" name="productLink"
+            placeholder="https://example.com/product" />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="amazonLink">Amazon Link</label>
+          <div class="field-hint">Similar product on Amazon (optional)</div>
+          <input type="url" id="amazonLink" name="amazonLink"
+            placeholder="https://amazon.com/dp/..." />
+        </div>
+
+        <label class="toggle-field" for="extendedThinking">
+          <input type="checkbox" id="extendedThinking" name="extendedThinking" />
+          <div class="toggle-label-wrap">
+            <span class="toggle-label">Extended Thinking</span>
+            <span class="toggle-desc">Deeper reasoning before generating the report. Recommended for complex or niche categories.</span>
+          </div>
+        </label>
+
+        <div class="info-box">
+          Claude will synthesize patterns from Amazon reviews, Reddit, forums, and social media based on its training knowledge to map desires and emotional drivers.
+        </div>
+
+        <button type="submit" class="btn-run" id="run-btn">
+          <span class="btn-icon">&#9654;</span>
+          <div class="spinner"></div>
+          Run Desire Research
+        </button>
+
+      </form>
+    </aside>
+
+    <!-- ── Results Panel ── -->
+    <section class="results-panel">
+
+      <div class="results-toolbar">
+        <div class="results-status">
+          <div class="status-dot" id="status-dot"></div>
+          <span class="status-text" id="status-text">Awaiting research parameters</span>
+        </div>
+        <div class="toolbar-actions">
+          <button class="btn-action" id="btn-copy" disabled>
+            &#10697; Copy
+          </button>
+          <button class="btn-action primary" id="btn-download" disabled>
+            &#8615; Download .md
+          </button>
+          <button class="btn-action" id="btn-new" disabled>
+            &#8635; New Research
+          </button>
+        </div>
+      </div>
+
+      <div class="output-scroll" id="output-scroll">
+
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">&#9741;</div>
+          <div class="empty-title">No research yet</div>
+          <div class="empty-desc">Configure your product parameters and run the analysis to surface market desires.</div>
+          <div class="empty-steps">
+            <div class="empty-step">
+              <span class="step-num">01</span>
+              <span>Enter your product category and target country</span>
+            </div>
+            <div class="empty-step">
+              <span class="step-num">02</span>
+              <span>Optionally provide product and Amazon URLs for context</span>
+            </div>
+            <div class="empty-step">
+              <span class="step-num">03</span>
+              <span>Claude maps 10 desires × 3 emotional drivers = 30 total mappings</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="output-container" style="display:none;">
+          <textarea id="output-raw" readonly></textarea>
+          <div id="output-rendered"></div>
+        </div>
+
+      </div>
+
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const form = document.getElementById('research-form');
+    const runBtn = document.getElementById('run-btn');
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const emptyState = document.getElementById('empty-state');
+    const outputContainer = document.getElementById('output-container');
+    const outputRaw = document.getElementById('output-raw');
+    const outputRendered = document.getElementById('output-rendered');
+    const outputScroll = document.getElementById('output-scroll');
+    const btnCopy = document.getElementById('btn-copy');
+    const btnDownload = document.getElementById('btn-download');
+    const btnNew = document.getElementById('btn-new');
+    const toast = document.getElementById('toast');
+
+    let rawBuffer = '';
+    let currentEventSource = null;
+    let renderTimer = null;
+
+    // Configure marked for safe rendering
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+    });
+
+    function setStatus(state, text) {
+      statusDot.className = 'status-dot' + (state ? ' ' + state : '');
+      statusText.textContent = text;
+    }
+
+    function showToast(msg, duration = 2000) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    function scheduleRender() {
+      clearTimeout(renderTimer);
+      renderTimer = setTimeout(() => {
+        outputRendered.innerHTML = marked.parse(rawBuffer) + '<span class="cursor"></span>';
+      }, 60);
+    }
+
+    function finalRender() {
+      clearTimeout(renderTimer);
+      outputRendered.innerHTML = marked.parse(rawBuffer);
+    }
+
+    function resetState() {
+      rawBuffer = '';
+      outputRaw.value = '';
+      outputRendered.innerHTML = '';
+      emptyState.style.display = '';
+      outputContainer.style.display = 'none';
+      setStatus('', 'Awaiting research parameters');
+      btnCopy.disabled = true;
+      btnDownload.disabled = true;
+      btnNew.disabled = true;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (currentEventSource) {
+        currentEventSource.close();
+        currentEventSource = null;
+      }
+
+      const productCategory = document.getElementById('productCategory').value.trim();
+      const country = document.getElementById('country').value.trim();
+      const product = document.getElementById('product').value.trim();
+      const productLink = document.getElementById('productLink').value.trim();
+      const amazonLink = document.getElementById('amazonLink').value.trim();
+      const extendedThinking = document.getElementById('extendedThinking').checked;
+
+      if (!productCategory || !country || !product) return;
+
+      // Reset UI
+      rawBuffer = '';
+      outputRaw.value = '';
+      outputRendered.innerHTML = '';
+      emptyState.style.display = 'none';
+      outputContainer.style.display = 'block';
+      btnCopy.disabled = true;
+      btnDownload.disabled = true;
+      btnNew.disabled = true;
+
+      runBtn.classList.add('loading');
+      runBtn.disabled = true;
+      setStatus('streaming', 'Initiating research...');
+
+      try {
+        const response = await fetch('/api/research', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productCategory, country, product, productLink, amazonLink, extendedThinking }),
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.error || `Server error ${response.status}`);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let sseBuffer = '';
+        let charCount = 0;
+
+        setStatus('streaming', 'Analyzing market desires...');
+
+        const processChunk = (chunk) => {
+          sseBuffer += decoder.decode(chunk, { stream: true });
+          const lines = sseBuffer.split('\n');
+          sseBuffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const raw = line.slice(6).trim();
+            if (raw === '[DONE]') {
+              finalRender();
+              runBtn.classList.remove('loading');
+              runBtn.disabled = false;
+              setStatus('done', `Research complete — ${rawBuffer.split(/\s+/).length.toLocaleString()} words generated`);
+              btnCopy.disabled = false;
+              btnDownload.disabled = false;
+              btnNew.disabled = false;
+              return;
+            }
+            try {
+              const parsed = JSON.parse(raw);
+              if (parsed.type === 'error') {
+                showError(parsed.message);
+                return;
+              }
+              if (parsed.type === 'text' && parsed.text) {
+                rawBuffer += parsed.text;
+                outputRaw.value = rawBuffer;
+                charCount += parsed.text.length;
+                setStatus('streaming', `Generating... ${charCount.toLocaleString()} characters`);
+                scheduleRender();
+                // Auto-scroll to bottom
+                outputScroll.scrollTop = outputScroll.scrollHeight;
+              }
+            } catch {}
+          }
+        };
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          processChunk(value);
+        }
+
+      } catch (err) {
+        showError(err.message);
+      }
+    });
+
+    function showError(msg) {
+      clearTimeout(renderTimer);
+      runBtn.classList.remove('loading');
+      runBtn.disabled = false;
+      setStatus('error', 'Research failed');
+      btnNew.disabled = false;
+
+      if (rawBuffer) {
+        finalRender();
+        outputRendered.innerHTML += `<div class="error-message" style="margin-top:16px"><strong>Error:</strong> ${escapeHtml(msg)}</div>`;
+      } else {
+        emptyState.style.display = 'none';
+        outputContainer.style.display = 'block';
+        outputRendered.innerHTML = `<div class="error-message"><strong>Error:</strong> ${escapeHtml(msg)}<br><br>Check that your <code>ANTHROPIC_API_KEY</code> is set correctly and try again.</div>`;
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    btnCopy.addEventListener('click', () => {
+      if (!rawBuffer) return;
+      navigator.clipboard.writeText(rawBuffer).then(() => {
+        showToast('Copied to clipboard');
+      }).catch(() => {
+        // Fallback
+        outputRaw.style.display = 'block';
+        outputRaw.select();
+        document.execCommand('copy');
+        outputRaw.style.display = 'none';
+        showToast('Copied to clipboard');
+      });
+    });
+
+    btnDownload.addEventListener('click', () => {
+      if (!rawBuffer) return;
+      const productVal = document.getElementById('product').value.trim() || 'research';
+      const slug = productVal.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').slice(0, 40);
+      const filename = `desire-research-${slug}-${Date.now()}.md`;
+      const blob = new Blob([rawBuffer], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Downloaded ' + filename);
+    });
+
+    btnNew.addEventListener('click', () => {
+      resetState();
+      document.getElementById('productCategory').focus();
+    });
+  </script>
+</body>
+</html>
