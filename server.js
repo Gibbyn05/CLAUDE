@@ -1,14 +1,12 @@
 const express = require('express');
-const Anthropic = require('@anthropic-ai/sdk');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const path = require('path');
 
 const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 function buildResearchPrompt(productCategory, country, product, productLink, amazonLink) {
   return `I am researching the mass desires that exist in the market for products in the
@@ -311,7 +309,7 @@ Structure: 10 surface desires × 3 emotional drivers = 30 total emotion mappings
 }
 
 app.post('/api/research', async (req, res) => {
-  const { productCategory, country, product, productLink, amazonLink, extendedThinking } = req.body;
+  const { productCategory, country, product, productLink, amazonLink } = req.body;
 
   if (!productCategory || !country || !product) {
     return res.status(400).json({ error: 'Product category, country, and product name are required.' });
@@ -325,42 +323,24 @@ app.post('/api/research', async (req, res) => {
 
   const prompt = buildResearchPrompt(productCategory, country, product, productLink, amazonLink);
 
-  const messageParams = {
-    model: 'claude-opus-4-6',
-    max_tokens: extendedThinking ? 16000 : 16000,
-    system: 'You are an expert market research analyst with deep knowledge of consumer psychology, product markets, and desire mapping. You synthesize patterns from Amazon reviews, Reddit communities, forums, and social media discussions to identify what customers truly want. Draw from your comprehensive knowledge of consumer behavior, product categories, and market dynamics to provide specific, data-grounded insights with realistic frequency estimates based on typical market patterns. Be precise with emotional language and always dig to the deepest emotional layer.',
-    messages: [{ role: 'user', content: prompt }],
-  };
-
-  if (extendedThinking) {
-    messageParams.thinking = {
-      type: 'enabled',
-      budget_tokens: 8000,
-    };
-  }
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-2.0-flash',
+    systemInstruction: 'You are an expert market research analyst with deep knowledge of consumer psychology, product markets, and desire mapping. You synthesize patterns from Amazon reviews, Reddit communities, forums, and social media discussions to identify what customers truly want. Draw from your comprehensive knowledge of consumer behavior, product categories, and market dynamics to provide specific, data-grounded insights with realistic frequency estimates based on typical market patterns. Be precise with emotional language and always dig to the deepest emotional layer.',
+  });
 
   try {
-    const stream = anthropic.messages.stream(messageParams);
+    const result = await model.generateContentStream(prompt);
 
-    stream.on('text', (text) => {
-      const data = JSON.stringify({ type: 'text', text });
-      res.write(`data: ${data}\n\n`);
-    });
+    for await (const chunk of result.stream) {
+      const text = chunk.text();
+      if (text) {
+        const data = JSON.stringify({ type: 'text', text });
+        res.write(`data: ${data}\n\n`);
+      }
+    }
 
-    stream.on('message', () => {
-      res.write('data: [DONE]\n\n');
-      res.end();
-    });
-
-    stream.on('error', (error) => {
-      const data = JSON.stringify({ type: 'error', message: error.message });
-      res.write(`data: ${data}\n\n`);
-      res.end();
-    });
-
-    req.on('close', () => {
-      stream.controller.abort();
-    });
+    res.write('data: [DONE]\n\n');
+    res.end();
   } catch (error) {
     const data = JSON.stringify({ type: 'error', message: error.message });
     res.write(`data: ${data}\n\n`);
@@ -371,7 +351,7 @@ app.post('/api/research', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Desire Research App running at http://localhost:${PORT}`);
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.warn('Warning: ANTHROPIC_API_KEY environment variable is not set.');
+  if (!process.env.GEMINI_API_KEY) {
+    console.warn('Warning: GEMINI_API_KEY environment variable is not set.');
   }
 });

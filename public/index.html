@@ -753,16 +753,8 @@
             placeholder="https://amazon.com/dp/..." />
         </div>
 
-        <label class="toggle-field" for="extendedThinking">
-          <input type="checkbox" id="extendedThinking" name="extendedThinking" />
-          <div class="toggle-label-wrap">
-            <span class="toggle-label">Extended Thinking</span>
-            <span class="toggle-desc">Deeper reasoning before generating the report. Recommended for complex or niche categories.</span>
-          </div>
-        </label>
-
         <div class="info-box">
-          Claude will synthesize patterns from Amazon reviews, Reddit, forums, and social media based on its training knowledge to map desires and emotional drivers.
+          Gemini will synthesize patterns from Amazon reviews, Reddit, forums, and social media based on its training knowledge to map desires and emotional drivers.
         </div>
 
         <button type="submit" class="btn-run" id="run-btn">
@@ -902,8 +894,6 @@
       const product = document.getElementById('product').value.trim();
       const productLink = document.getElementById('productLink').value.trim();
       const amazonLink = document.getElementById('amazonLink').value.trim();
-      const extendedThinking = document.getElementById('extendedThinking').checked;
-
       if (!productCategory || !country || !product) return;
 
       // Reset UI
@@ -924,7 +914,7 @@
         const response = await fetch('/api/research', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ productCategory, country, product, productLink, amazonLink, extendedThinking }),
+          body: JSON.stringify({ productCategory, country, product, productLink, amazonLink }),
         });
 
         if (!response.ok) {
