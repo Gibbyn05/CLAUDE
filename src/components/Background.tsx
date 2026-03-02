@@ -1,79 +1,38 @@
-import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { AbsoluteFill } from 'remotion';
+import { COLORS } from '../constants';
 
-type BackgroundVariant = "light" | "dark" | "gradient-indigo" | "gradient-green";
+type BackgroundVariant = 'dark' | 'dark-teal' | 'dark-purple' | 'dark-shift';
 
 interface BackgroundProps {
   variant?: BackgroundVariant;
 }
 
-const VARIANTS: Record<BackgroundVariant, React.CSSProperties> = {
-  light: {
-    background: "linear-gradient(145deg, #FAFAF8 0%, #F0EDE6 100%)",
-  },
-  dark: {
-    background: "linear-gradient(145deg, #0F172A 0%, #1E293B 100%)",
-  },
-  "gradient-indigo": {
-    background: "linear-gradient(145deg, #EEF2FF 0%, #E0E7FF 60%, #F0EDE6 100%)",
-  },
-  "gradient-green": {
-    background: "linear-gradient(145deg, #F0FDF4 0%, #DCFCE7 60%, #F0EDE6 100%)",
-  },
+const GRADIENTS: Record<BackgroundVariant, string> = {
+  dark: [
+    `radial-gradient(ellipse at 20% 20%, rgba(0,229,200,0.09) 0%, transparent 55%)`,
+    `radial-gradient(ellipse at 80% 80%, rgba(167,139,250,0.09) 0%, transparent 55%)`,
+    COLORS.bg,
+  ].join(', '),
+
+  'dark-teal': [
+    `radial-gradient(ellipse at 30% 30%, rgba(0,229,200,0.16) 0%, transparent 60%)`,
+    `radial-gradient(ellipse at 75% 72%, rgba(167,139,250,0.07) 0%, transparent 50%)`,
+    COLORS.bg,
+  ].join(', '),
+
+  'dark-purple': [
+    `radial-gradient(ellipse at 68% 22%, rgba(167,139,250,0.16) 0%, transparent 58%)`,
+    `radial-gradient(ellipse at 28% 78%, rgba(0,229,200,0.07) 0%, transparent 50%)`,
+    COLORS.bg,
+  ].join(', '),
+
+  'dark-shift': [
+    `radial-gradient(ellipse at 50% 38%, rgba(0,229,200,0.13) 0%, transparent 65%)`,
+    `radial-gradient(ellipse at 50% 62%, rgba(167,139,250,0.13) 0%, transparent 65%)`,
+    COLORS.bg,
+  ].join(', '),
 };
 
-// Subtle animated noise / grain overlay for depth
-const Grain: React.FC = () => (
-  <AbsoluteFill
-    style={{
-      opacity: 0.025,
-      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-      backgroundRepeat: "repeat",
-    }}
-  />
-);
-
-// Decorative soft circle blobs
-const Blobs: React.FC<{ variant: BackgroundVariant }> = ({ variant }) => {
-  const frame = useCurrentFrame();
-  const breathe = interpolate(frame % 120, [0, 60, 120], [0, 8, 0]);
-
-  const isDark = variant === "dark";
-  const blob1Color = isDark ? "rgba(99,102,241,0.15)" : "rgba(99,102,241,0.08)";
-  const blob2Color = isDark ? "rgba(16,185,129,0.1)" : "rgba(16,185,129,0.06)";
-
-  return (
-    <>
-      <div
-        style={{
-          position: "absolute",
-          top: -200 + breathe,
-          right: -150,
-          width: 700,
-          height: 700,
-          borderRadius: "50%",
-          background: blob1Color,
-          filter: "blur(80px)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: -200 - breathe,
-          left: -100,
-          width: 600,
-          height: 600,
-          borderRadius: "50%",
-          background: blob2Color,
-          filter: "blur(80px)",
-        }}
-      />
-    </>
-  );
-};
-
-export const Background: React.FC<BackgroundProps> = ({ variant = "light" }) => (
-  <AbsoluteFill style={VARIANTS[variant]}>
-    <Blobs variant={variant} />
-    <Grain />
-  </AbsoluteFill>
+export const Background: React.FC<BackgroundProps> = ({ variant = 'dark' }) => (
+  <AbsoluteFill style={{ background: GRADIENTS[variant] }} />
 );

@@ -1,49 +1,53 @@
-// KlingVekstPromo — main composition
-// 35 seconds @ 30fps = 1050 frames
+// KlingVekst_Vertical_Dark — 9:16 portrait, dark SaaS, 28s @ 30fps = 840 frames
 //
-// Scene timing (frames):
-//   Scene 1 — Hook          :   0 – 120  (4s)
-//   Scene 2 — Problem       : 120 – 270  (5s)
-//   Scene 3 — Solution Intro: 270 – 420  (5s)
-//   Scene 4 — Benefits      : 420 – 720  (10s)
-//   Scene 5 — Social Proof  : 720 – 900  (6s)
-//   Scene 6 — CTA           : 900 – 1050 (5s)
+// Scene timing (frames @ 30fps):
+//   Scene 1 — Hook      :   0 –  90  (3s)
+//   Scene 2 — Pain      :  90 – 210  (4s)
+//   Scene 3 — Shift     : 210 – 300  (3s)
+//   Scene 4 — Solution  : 300 – 450  (5s)
+//   Scene 5 — Benefits  : 450 – 660  (7s)
+//   Scene 6 — Proof     : 660 – 750  (3s)
+//   Scene 7 — CTA       : 750 – 840  (3s)
 
-import { AbsoluteFill, Sequence } from "remotion";
-import { Scene1Hook } from "../scenes/Scene1Hook";
-import { Scene2Problem } from "../scenes/Scene2Problem";
-import { Scene3Solution } from "../scenes/Scene3Solution";
-import { Scene4Benefits } from "../scenes/Scene4Benefits";
-import { Scene5SocialProof } from "../scenes/Scene5SocialProof";
-import { Scene6CTA } from "../scenes/Scene6CTA";
+import { AbsoluteFill, Sequence } from 'remotion';
+import { Scene1Hook } from '../scenes/Scene1Hook';
+import { Scene2Pain } from '../scenes/Scene2Pain';
+import { Scene3Shift } from '../scenes/Scene3Shift';
+import { Scene4Solution } from '../scenes/Scene4Solution';
+import { Scene5Benefits } from '../scenes/Scene5Benefits';
+import { Scene6Proof } from '../scenes/Scene6Proof';
+import { Scene7CTA } from '../scenes/Scene7CTA';
+import { OFFSETS, DURATIONS } from '../constants';
 
-// Each scene gets its own Sequence so useCurrentFrame() resets to 0
-// inside each scene component.
-
-export const KlingVekstPromo: React.FC = () => (
-  <AbsoluteFill>
-    <Sequence from={0} durationInFrames={120}>
+// Each Sequence resets useCurrentFrame() to 0 inside the scene component.
+export const KlingVekstVerticalDark: React.FC = () => (
+  <AbsoluteFill style={{ background: '#08080E' }}>
+    <Sequence from={OFFSETS.scene1} durationInFrames={DURATIONS.scene1}>
       <Scene1Hook />
     </Sequence>
 
-    <Sequence from={120} durationInFrames={150}>
-      <Scene2Problem />
+    <Sequence from={OFFSETS.scene2} durationInFrames={DURATIONS.scene2}>
+      <Scene2Pain />
     </Sequence>
 
-    <Sequence from={270} durationInFrames={150}>
-      <Scene3Solution />
+    <Sequence from={OFFSETS.scene3} durationInFrames={DURATIONS.scene3}>
+      <Scene3Shift />
     </Sequence>
 
-    <Sequence from={420} durationInFrames={300}>
-      <Scene4Benefits />
+    <Sequence from={OFFSETS.scene4} durationInFrames={DURATIONS.scene4}>
+      <Scene4Solution />
     </Sequence>
 
-    <Sequence from={720} durationInFrames={180}>
-      <Scene5SocialProof />
+    <Sequence from={OFFSETS.scene5} durationInFrames={DURATIONS.scene5}>
+      <Scene5Benefits />
     </Sequence>
 
-    <Sequence from={900} durationInFrames={150}>
-      <Scene6CTA />
+    <Sequence from={OFFSETS.scene6} durationInFrames={DURATIONS.scene6}>
+      <Scene6Proof />
+    </Sequence>
+
+    <Sequence from={OFFSETS.scene7} durationInFrames={DURATIONS.scene7}>
+      <Scene7CTA />
     </Sequence>
   </AbsoluteFill>
 );

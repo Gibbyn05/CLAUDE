@@ -4,8 +4,8 @@
   "description": "Kling Vekst SaaS marketing video — Remotion composition",
   "scripts": {
     "start": "remotion studio",
-    "render": "remotion render KlingVekstPromo out/KlingVekstPromo.mp4 --browser-executable=/root/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell",
-    "build": "remotion render KlingVekstPromo out/KlingVekstPromo.mp4 --browser-executable=/root/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell --gl=angle"
+    "render": "remotion render KlingVekst-Vertical-Dark out/KlingVekstPromo.mp4 --browser-executable=/root/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell",
+    "build": "remotion render KlingVekst-Vertical-Dark out/KlingVekstPromo.mp4 --browser-executable=/root/.cache/ms-playwright/chromium_headless_shell-1194/chrome-linux/headless_shell --gl=angle"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.0",

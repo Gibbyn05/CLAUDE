@@ -1,83 +1,87 @@
-// Scene 1 — Hook (0–4s, 120 frames)
-// "Sliter du med å få nok kunder?"
+// Scene 1 — Hook (0–3s, 90 frames)
+// "Får du for få leads?" + "Du er ikke alene."
 
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring } from "remotion";
-import { Background } from "../components/Background";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
+import { Background } from '../components/Background';
+import { Title } from '../components/Title';
+import { SubTitle } from '../components/SubTitle';
+import { COLORS, DURATIONS, COPY, SAFE } from '../constants';
 
 export const Scene1Hook: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Fade entire scene out in last 15 frames
-  const sceneOpacity = interpolate(frame, [105, 120], [1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+  const sceneOut = interpolate(frame, [DURATIONS.scene1 - 12, DURATIONS.scene1], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
   });
 
-  // Main text entrance
-  const textProgress = spring({
-    frame,
-    fps,
-    config: { damping: 20, stiffness: 100, mass: 1 },
-  });
+  // Ambient glow orb entrance
+  const glowProgress = spring({ frame, fps, config: { damping: 28, stiffness: 60, mass: 1.5 } });
+  const glowScale = interpolate(glowProgress, [0, 1], [0.4, 1]);
+  const glowOpacity = interpolate(frame, [0, 20], [0, 1], { extrapolateRight: 'clamp' });
 
-  const textScale = interpolate(textProgress, [0, 1], [0.9, 1]);
-  const textOpacity = interpolate(frame, [0, 12], [0, 1], {
-    extrapolateRight: "clamp",
-  });
-
-  // Cursor blink at end of question
-  const cursorOpacity = interpolate((frame % 30), [0, 15, 30], [1, 0, 1]);
+  // Subtext pulse
+  const pulsePhase = frame % 90;
+  const pulse = interpolate(pulsePhase, [0, 45, 90], [0.6, 1, 0.6]);
 
   return (
-    <AbsoluteFill style={{ opacity: sceneOpacity }}>
-      <Background variant="light" />
+    <AbsoluteFill style={{ opacity: sceneOut }}>
+      <Background variant="dark-teal" />
+
+      {/* Ambient glow orb */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '30%',
+          left: '50%',
+          transform: `translate(-50%, -50%) scale(${glowScale})`,
+          width: 700,
+          height: 700,
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${COLORS.primary}18 0%, transparent 70%)`,
+          opacity: glowOpacity,
+        }}
+      />
 
       <AbsoluteFill
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0 160px",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: `${SAFE.v}px ${SAFE.h}px`,
+          gap: 36,
         }}
       >
-        {/* Eyebrow label */}
+        {/* Brand label */}
         <div
           style={{
-            opacity: interpolate(frame, [8, 20], [0, 1], { extrapolateRight: "clamp" }),
-            transform: `translateY(${interpolate(frame, [8, 20], [10, 0], { extrapolateRight: "clamp" })}px)`,
-            fontSize: 22,
+            opacity: interpolate(frame, [4, 18], [0, 1], { extrapolateRight: 'clamp' }),
+            transform: `translateY(${interpolate(frame, [4, 18], [16, 0], { extrapolateRight: 'clamp' })}px)`,
+            fontSize: 30,
             fontWeight: 600,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "#6366F1",
-            marginBottom: 28,
-            fontFamily: "'SF Pro Text', 'Inter', 'Helvetica Neue', sans-serif",
+            color: COLORS.primary,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            fontFamily: "'Inter', 'SF Pro Text', sans-serif",
           }}
         >
-          Kling Vekst
+          {COPY.brand}
         </div>
 
-        {/* Main headline */}
-        <div
-          style={{
-            opacity: textOpacity,
-            transform: `scale(${textScale})`,
-            fontSize: 96,
-            fontWeight: 800,
-            color: "#111827",
-            textAlign: "center",
-            lineHeight: 1.1,
-            letterSpacing: "-0.03em",
-            fontFamily: "'SF Pro Display', 'Inter', 'Helvetica Neue', sans-serif",
-            maxWidth: 1100,
-          }}
+        <Title delay={6} size={112} glow style={{ maxWidth: 900 }}>
+          {COPY.scene1.headline}
+        </Title>
+
+        <SubTitle
+          delay={22}
+          size={50}
+          color={COLORS.muted}
+          style={{ textShadow: `0 0 ${40 * pulse}px ${COLORS.primary}33` }}
         >
-          Sliter du med å få{" "}
-          <span style={{ color: "#6366F1" }}>nok kunder?</span>
-          <span style={{ opacity: cursorOpacity, color: "#6366F1" }}>|</span>
-        </div>
+          {COPY.scene1.sub}
+        </SubTitle>
       </AbsoluteFill>
     </AbsoluteFill>
   );
