@@ -1,0 +1,21 @@
+{
+  "name": "kling-vekst-promo",
+  "version": "1.0.0",
+  "description": "Kling Vekst SaaS marketing video — Remotion composition",
+  "scripts": {
+    "start": "remotion studio",
+    "render": "remotion render KlingVekstPromo out/KlingVekstPromo.mp4",
+    "build": "remotion render KlingVekstPromo out/KlingVekstPromo.mp4 --gl=angle"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "remotion": "^4.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
