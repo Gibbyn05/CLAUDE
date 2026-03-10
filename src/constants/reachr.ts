@@ -29,3 +29,22 @@ export const R_OFFSETS = {
   s5: 600,
   s6: 660,
 };
+
+// ── Vertical (9:16) variant — no scene 5, extended hook & CTA ───────────────
+// S1: 5s (150f), S2: 3s (90f), S3: 4s (120f), S4: 9s (270f), S6: 4s (120f)
+export const RV_DURATIONS = {
+  s1: 150,
+  s2: 90,
+  s3: 120,
+  s4: 270,
+  s6: 120,
+  total: 750,
+};
+
+export const RV_OFFSETS = {
+  s1: 0,
+  s2: 150,
+  s3: 240,
+  s4: 360,
+  s6: 630,
+};

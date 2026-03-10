@@ -4,18 +4,21 @@
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import { R_COLORS } from '../constants/reachr';
 
-const ChaosIcon: React.FC<{
+export const ChaosIcon: React.FC<{
   emoji: string;
   tx: number;
   ty: number;
   delay: number;
   frame: number;
   fps: number;
-}> = ({ emoji, tx, ty, delay, frame, fps }) => {
+  size?: number;
+}> = ({ emoji, tx, ty, delay, frame, fps, size = 64 }) => {
   const f = Math.max(0, frame - delay);
   const s = spring({ frame: f, fps, config: { damping: 10, stiffness: 60, mass: 1.2 } });
   const rot = interpolate(f, [0, 25], [720, 0], { extrapolateRight: 'clamp' });
   const opacity = interpolate(f, [0, 5], [0, 1], { extrapolateRight: 'clamp' });
+  // Gentle float after landing
+  const floatY = f > 25 ? Math.sin((f - 25) * 0.08 + tx) * 6 : 0;
 
   return (
     <div
@@ -23,8 +26,8 @@ const ChaosIcon: React.FC<{
         position: 'absolute',
         left: `${tx}%`,
         top: `${ty}%`,
-        transform: `translate(-50%,-50%) scale(${s}) rotate(${rot}deg)`,
-        fontSize: 64,
+        transform: `translate(-50%,-50%) translateY(${floatY}px) scale(${s}) rotate(${rot}deg)`,
+        fontSize: size,
         opacity,
         filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.12))',
       }}
@@ -34,39 +37,88 @@ const ChaosIcon: React.FC<{
   );
 };
 
-const SalesRep: React.FC<{ frame: number; fps: number }> = ({ frame, fps }) => {
-  const shrug = spring({
-    frame: Math.max(0, frame - 75),
-    fps,
-    config: { damping: 8, stiffness: 150 },
-  });
-  const lift = interpolate(shrug, [0, 1], [0, -18]);
+export const SalesRep: React.FC<{ frame: number; fps: number; scale?: number }> = ({ frame, fps, scale = 1 }) => {
+  // Breathing — subtle body scale
+  const breathe = 1 + Math.sin(frame * 0.14) * 0.018;
+
+  // Weight shift — body tilts gently left/right
+  const weightShift = Math.sin(frame * 0.07) * 2.5;
+
+  // Blink — every 50 frames, closes for 4 frames
+  const blinkCycle = frame % 50;
+  const eyeH = blinkCycle < 4 ? interpolate(blinkCycle, [0, 1.5, 2.5, 4], [1, 0.08, 0.08, 1]) : 1;
+
+  // Head sway left/right
+  const headSway = Math.sin(frame * 0.09) * 4;
+
+  // Arms fidget before shrug, then lift
+  const armFidget = frame < 75 ? Math.sin(frame * 0.22) * 5 : 0;
+  const shrug = spring({ frame: Math.max(0, frame - 75), fps, config: { damping: 8, stiffness: 150 } });
+  const shrugLift = interpolate(shrug, [0, 1], [0, -18]);
+  const armY = shrugLift - armFidget;
+
+  // Legs — slight restless shift
+  const legSwing = Math.sin(frame * 0.15) * 3;
+
+  // Mouth nervous twitch
+  const mouthY = Math.sin(frame * 0.2) * 1.5;
+
+  // Sweat drop bobs
+  const sweatY = Math.sin(frame * 0.18) * 3;
+
+  const w = 160 * scale;
+  const h = 240 * scale;
 
   return (
-    <svg width="160" height="240" viewBox="0 0 160 240" fill="none">
-      {/* Shadow */}
+    <svg
+      width={w}
+      height={h}
+      viewBox="0 0 160 240"
+      fill="none"
+      style={{ transform: `scale(${breathe}) rotate(${weightShift}deg)`, transformOrigin: 'center 220px' }}
+    >
+      {/* Ground shadow */}
       <ellipse cx="80" cy="232" rx="52" ry="10" fill="rgba(0,0,0,0.07)" />
+
       {/* Body */}
       <rect x="45" y="100" width="70" height="80" rx="12" fill="#e8e4d4" stroke={R_COLORS.dark} strokeWidth="3" />
-      {/* Left arm */}
-      <line x1="45" y1={110 + lift} x2="16" y2={142 + lift} stroke={R_COLORS.dark} strokeWidth="4" strokeLinecap="round" />
+
+      {/* Left arm — fidgets then shrugs */}
+      <line x1="45" y1={110 + armY} x2="16" y2={142 + armY} stroke={R_COLORS.dark} strokeWidth="4" strokeLinecap="round" />
       {/* Right arm */}
-      <line x1="115" y1={110 + lift} x2="144" y2={142 + lift} stroke={R_COLORS.dark} strokeWidth="4" strokeLinecap="round" />
-      {/* Legs */}
-      <line x1="66" y1="180" x2="60" y2="226" stroke={R_COLORS.dark} strokeWidth="4" strokeLinecap="round" />
-      <line x1="94" y1="180" x2="100" y2="226" stroke={R_COLORS.dark} strokeWidth="4" strokeLinecap="round" />
-      {/* Head */}
-      <circle cx="80" cy="68" r="38" fill="#e8e4d4" stroke={R_COLORS.dark} strokeWidth="3" />
-      {/* Eyes */}
-      <ellipse cx="65" cy="62" rx="5" ry="6" fill={R_COLORS.dark} />
-      <ellipse cx="95" cy="62" rx="5" ry="6" fill={R_COLORS.dark} />
-      {/* Worried brows */}
-      <line x1="57" y1="50" x2="73" y2="55" stroke={R_COLORS.dark} strokeWidth="3" strokeLinecap="round" />
-      <line x1="87" y1="55" x2="103" y2="50" stroke={R_COLORS.dark} strokeWidth="3" strokeLinecap="round" />
-      {/* Flat mouth */}
-      <path d="M 67 83 Q 80 78 93 83" stroke={R_COLORS.dark} strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      {/* Sweat drop */}
-      <ellipse cx="110" cy="47" rx="5" ry="7" fill="#a8d8ea" opacity="0.85" />
+      <line x1="115" y1={110 + armY} x2="144" y2={142 + armY} stroke={R_COLORS.dark} strokeWidth="4" strokeLinecap="round" />
+
+      {/* Legs — restless shift */}
+      <line x1="66" y1="180" x2={60 + legSwing} y2="226" stroke={R_COLORS.dark} strokeWidth="4" strokeLinecap="round" />
+      <line x1="94" y1="180" x2={100 - legSwing} y2="226" stroke={R_COLORS.dark} strokeWidth="4" strokeLinecap="round" />
+
+      {/* Head group — sways */}
+      <g transform={`rotate(${headSway}, 80, 68)`}>
+        <circle cx="80" cy="68" r="38" fill="#e8e4d4" stroke={R_COLORS.dark} strokeWidth="3" />
+
+        {/* Eyes — blink */}
+        <ellipse cx="65" cy="62" rx="5" ry={6 * eyeH} fill={R_COLORS.dark} />
+        <ellipse cx="95" cy="62" rx="5" ry={6 * eyeH} fill={R_COLORS.dark} />
+        {/* Pupils — look side to side */}
+        <ellipse cx={65 + Math.sin(frame * 0.05) * 2} cy={62} rx="2" ry={2 * eyeH} fill="white" />
+        <ellipse cx={95 + Math.sin(frame * 0.05) * 2} cy={62} rx="2" ry={2 * eyeH} fill="white" />
+
+        {/* Worried brows */}
+        <line x1="57" y1="50" x2="73" y2="55" stroke={R_COLORS.dark} strokeWidth="3" strokeLinecap="round" />
+        <line x1="87" y1="55" x2="103" y2="50" stroke={R_COLORS.dark} strokeWidth="3" strokeLinecap="round" />
+
+        {/* Mouth — nervous twitch */}
+        <path
+          d={`M 67 ${83 + mouthY} Q 80 ${78 + mouthY} 93 ${83 + mouthY}`}
+          stroke={R_COLORS.dark}
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          fill="none"
+        />
+
+        {/* Sweat drop — bobs */}
+        <ellipse cx="110" cy={47 + sweatY} rx="5" ry="7" fill="#a8d8ea" opacity="0.85" />
+      </g>
     </svg>
   );
 };

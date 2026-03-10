@@ -3,9 +3,10 @@ import { KlingVekstVerticalDark }  from './compositions/KlingVekstPromo';
 import { KlingVekstHighMotion }    from './compositions/KlingVekstHighMotion';
 import { KlingVekstDarkPremium }   from './compositions/KlingVekstDarkPremium';
 import { ReachrPromo }             from './compositions/ReachrPromo';
+import { ReachrPromo_V }           from './compositions/ReachrPromo_V';
 import { DURATIONS, FPS }          from './constants';
 import { HM_DURATIONS }            from './constants/highMotion';
-import { R_DURATIONS }             from './constants/reachr';
+import { R_DURATIONS, RV_DURATIONS } from './constants/reachr';
 
 const DP_FRAMES = 780; // 26s @ 30fps
 
@@ -45,6 +46,15 @@ export const Root: React.FC = () => (
       fps={30}
       width={1920}
       height={1080}
+    />
+
+    <Composition
+      id="Reachr-9x16"
+      component={ReachrPromo_V}
+      durationInFrames={RV_DURATIONS.total}
+      fps={30}
+      width={1080}
+      height={1920}
     />
   </>
 );
