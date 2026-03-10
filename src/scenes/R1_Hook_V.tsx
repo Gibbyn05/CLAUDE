@@ -89,7 +89,7 @@ export const R1_Hook_V: React.FC = () => {
           lineHeight: 1.2,
         }}
       >
-        Hvem skal jeg kontakte neste?
+        Slik ser salg ut uten et system.
       </div>
 
       {/* Voiceover sub */}
@@ -107,7 +107,7 @@ export const R1_Hook_V: React.FC = () => {
           color: R_COLORS.muted,
         }}
       >
-        Prospektering er kaotisk.
+        Kaos av regneark, e-poster og lapper.
       </div>
     </AbsoluteFill>
   );

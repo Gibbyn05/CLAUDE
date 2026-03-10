@@ -206,7 +206,7 @@ export const R1_Hook: React.FC = () => {
           lineHeight: 1.1,
         }}
       >
-        Hvem skal jeg kontakte neste?
+        Slik ser salg ut uten et system.
       </div>
 
       {/* Voiceover sub */}
@@ -224,7 +224,7 @@ export const R1_Hook: React.FC = () => {
           color: R_COLORS.muted,
         }}
       >
-        Prospektering er kaotisk.
+        Kaos av regneark, e-poster og lapper.
       </div>
     </AbsoluteFill>
   );
