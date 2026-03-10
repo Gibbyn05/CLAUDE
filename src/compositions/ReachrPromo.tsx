@@ -16,9 +16,11 @@ import { R4_Features } from '../scenes/R4_Features';
 import { R5_SocialProof } from '../scenes/R5_SocialProof';
 import { R6_CTA } from '../scenes/R6_CTA';
 import { R_DURATIONS, R_OFFSETS } from '../constants/reachr';
+import { AudioTrack } from '../audio/AudioTrack';
 
 export const ReachrPromo: React.FC = () => (
   <AbsoluteFill>
+    <AudioTrack />
     <Sequence from={R_OFFSETS.s1} durationInFrames={R_DURATIONS.s1}>
       <R1_Hook />
     </Sequence>

@@ -9,6 +9,7 @@
 //   Scene 6 — CTA      : 630 – 749  (4s)
 
 import { AbsoluteFill, Sequence } from 'remotion';
+import { AudioTrack_V } from '../audio/AudioTrack_V';
 import { R1_Hook_V } from '../scenes/R1_Hook_V';
 import { R2_Pain_V } from '../scenes/R2_Pain_V';
 import { R3_Reveal_V } from '../scenes/R3_Reveal_V';
@@ -18,6 +19,7 @@ import { RV_DURATIONS, RV_OFFSETS } from '../constants/reachr';
 
 export const ReachrPromo_V: React.FC = () => (
   <AbsoluteFill>
+    <AudioTrack_V />
     <Sequence from={RV_OFFSETS.s1} durationInFrames={RV_DURATIONS.s1}>
       <R1_Hook_V />
     </Sequence>
