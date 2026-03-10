@@ -302,6 +302,42 @@ function genDrag(dur = 0.28) {
   return s;
 }
 
+// Mouse click: short mechanical click (2kHz transient + click body)
+function genClick(dur = 0.12) {
+  const n = Math.ceil(dur * SR);
+  const s = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const t   = i / SR;
+    // Initial transient: very short noise burst
+    const transient = (Math.random() * 2 - 1) * Math.exp(-t * 400) * 0.7;
+    // Body: 1.8kHz tone with fast decay
+    const body = Math.sin(2 * Math.PI * 1800 * t) * Math.exp(-t * 70) * 0.4;
+    // Release click
+    const release = (Math.random() * 2 - 1) * Math.exp(-Math.max(0, t - 0.04) * 300) * 0.3;
+    s[i] = transient + body + release;
+  }
+  return lpFilter(hpFilter(s, 0.75), 0.55);
+}
+
+// Error tone: descending minor 3rd (A4→F#4), dissonant
+function genError(dur = 0.22) {
+  const n  = Math.ceil(dur * SR);
+  const s  = new Float32Array(n);
+  const f0 = 440, f1 = 369.99; // A4 → F#4 (descending)
+  for (let i = 0; i < n; i++) {
+    const t    = i / SR;
+    const att  = Math.min(1, t / 0.006);
+    const dec  = t > dur * 0.55 ? 1 - (t - dur * 0.55) / (dur * 0.45) : 1;
+    const env  = att * dec * 0.8;
+    // First note full dur, second overlaps from 40ms
+    const phase1 = 2 * Math.PI * f0 * t;
+    const phase2 = 2 * Math.PI * f1 * Math.max(0, t - 0.04);
+    const mix2   = Math.min(1, Math.max(0, (t - 0.04) / 0.01));
+    s[i] = env * (Math.sin(phase1) * 0.5 + Math.sin(phase2) * mix2 * 0.5);
+  }
+  return s;
+}
+
 // ── Write all files ───────────────────────────────────────────────────────────
 const OUT = path.join(__dirname, '..', 'public', 'audio');
 fs.mkdirSync(OUT, { recursive: true });
@@ -316,4 +352,6 @@ writeWav(path.join(OUT, 'sfx_stamp.wav'), genStamp());
 writeWav(path.join(OUT, 'sfx_type.wav'),  genTyping());
 writeWav(path.join(OUT, 'sfx_send.wav'),  genSend());
 writeWav(path.join(OUT, 'sfx_drag.wav'),  genDrag());
+writeWav(path.join(OUT, 'sfx_click.wav'), genClick());
+writeWav(path.join(OUT, 'sfx_error.wav'), genError());
 console.log('Done.');
