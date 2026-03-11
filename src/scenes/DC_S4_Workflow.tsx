@@ -297,7 +297,7 @@ export const DC_S4_Workflow: React.FC = () => {
       {/* Caption */}
       <div style={{ position: 'absolute', bottom: 60, left: 44, right: 44, textAlign: 'center' }}>
         <div style={{ fontFamily: 'system-ui, sans-serif', fontSize: 20, color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}>
-          Aldri mer tapte leads. Aldri mer kaos.
+          Finn leads. Følg opp. Lukk deals.
         </div>
       </div>
 

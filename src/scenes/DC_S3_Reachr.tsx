@@ -178,7 +178,7 @@ export const DC_S3_Reachr: React.FC = () => {
           zIndex: 30,
         }}
       >
-        Alt på ett sted. Alltid oversikt.
+        Reachr samler alt på ett sted
       </div>
     </AbsoluteFill>
   );
